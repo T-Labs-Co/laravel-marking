@@ -9,31 +9,31 @@ return [
      * List of characters that can delimit the labels passed to the
      * mark() / unmark() / etc. functions.
      */
-    'delimiters'           => ',;',
+    'delimiters' => ',;',
 
     /**
      * Character used to delimit tag lists returned in the
      * markList, markListNormalized, etc. attributes.
      */
-    'glue'                 => ',',
+    'glue' => ',',
 
     // allow marking classification group
-    'classifications'                => array_merge(['general'], Arr::dot(explode(',', env('LARAVEL_MARKING_CLASSIFICATIONS', '')))),
-    'default_classification'          => env('LARAVEL_MARKING_CLASSIFICATION_DEFAULT', 'general'),
+    'classifications' => array_merge(['general'], Arr::dot(explode(',', env('LARAVEL_MARKING_CLASSIFICATIONS', '')))),
+    'default_classification' => env('LARAVEL_MARKING_CLASSIFICATION_DEFAULT', 'general'),
 
     'default_value' => env('LARAVEL_MARKING_VALUE_DEFAULT', 1), // using to count or sum point
     /**
      * Method used to "normalize" label names.  Can either be a global function name,
      * a closure function, or a callable, e.g. ['Classname', 'method'].
      */
-    'normalizer'           => 'snake_case',
+    'normalizer' => 'snake_case',
 
     /**
      * The database connection to use for the Mark model and associated tables.
      * By default, we use the default database connection, but this can be defined
      * so that all the label-related tables are stored in a different connection.
      */
-    'connection'           => null,
+    'connection' => null,
 
     /**
      * How to handle passing empty values to the scope queries.  When set to false,
@@ -59,7 +59,6 @@ return [
      *
      * to get a collection of all the Posts that are marked "label".
      */
-
     'markedModels' => [],
 
     /**
@@ -67,15 +66,14 @@ return [
      * create your own class that extends the package's Marking model,
      * then update the configuration below.
      */
-    'model'  => \TLabsCo\LaravelMarking\Models\Mark::class,
-
+    'model' => \TLabsCo\LaravelMarking\Models\Mark::class,
 
     /**
      * The tables used to store the tags in the database.  You can
      * publish the package's migrations and use custom names.
      */
     'tables' => [
-        'marking_marks'        => 'marking_marks',
-        'marking_markables'    => 'marking_markables',
-    ]
+        'marking_marks' => 'marking_marks',
+        'marking_markables' => 'marking_markables',
+    ],
 ];

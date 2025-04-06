@@ -2,7 +2,6 @@
 
 namespace TLabsCo\LaravelMarking;
 
-
 use Cviebrock\EloquentTaggable\Models\Tag;
 use Illuminate\Support\Collection as BaseCollection;
 use TLabsCo\LaravelMarking\Models\Mark;
@@ -35,9 +34,8 @@ class MarkingService
     /**
      * Convert a delimited string into an array of tag strings.
      *
-     * @param string|array|Mark|\Illuminate\Support\Collection $marks
+     * @param  string|array|Mark|\Illuminate\Support\Collection  $marks
      *
-     * @return array
      * @throws \ErrorException
      */
     public function buildMarkArray($marks): array
@@ -50,7 +48,7 @@ class MarkingService
             $array = $this->buildMarkArray($marks->all());
         } elseif (is_string($marks)) {
             $array = preg_split(
-                '#[' . preg_quote(config('marking.delimiters'), '#') . ']#',
+                '#['.preg_quote(config('marking.delimiters'), '#').']#',
                 $marks,
                 -1,
                 PREG_SPLIT_NO_EMPTY
@@ -58,8 +56,8 @@ class MarkingService
         } else {
 
             throw new \ErrorException(
-                __CLASS__ . '::' . __METHOD__ . ' expects parameter 1 to be string, array, Tag or Collection; ' .
-                gettype($marks) . ' given'
+                __CLASS__.'::'.__METHOD__.' expects parameter 1 to be string, array, Tag or Collection; '.
+                gettype($marks).' given'
             );
         }
 
@@ -71,9 +69,8 @@ class MarkingService
     /**
      * Convert a delimited string into an array of normalized tag strings.
      *
-     * @param string|array|Mark|\Illuminate\Support\Collection $marks
+     * @param  string|array|Mark|\Illuminate\Support\Collection  $marks
      *
-     * @return array
      * @throws \ErrorException
      */
     public function buildMarkArrayNormalized($marks): array
@@ -82,5 +79,4 @@ class MarkingService
 
         return array_map([$this, 'normalize'], $marks);
     }
-
 }

@@ -10,15 +10,11 @@ class TypeScope implements Scope
 {
     /**
      * The type to filter by.
-     *
-     * @var string
      */
     protected string $type;
 
     /**
      * Create a new TypeScope instance.
-     *
-     * @param string $type
      */
     public function __construct(string $type)
     {
@@ -27,10 +23,6 @@ class TypeScope implements Scope
 
     /**
      * Apply the scope to a given Eloquent query builder.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $builder
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @return void
      */
     public function apply(Builder $builder, Model $model): void
     {

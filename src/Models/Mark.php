@@ -27,17 +27,17 @@ class Mark extends Model
     protected $primaryKey = 'mark_id';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected $fillable = [
         'name',
         'classification',
         'normalized',
-        'weight'
+        'weight',
     ];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected $casts = [
         'created_at' => 'datetime',
@@ -45,7 +45,7 @@ class Mark extends Model
     ];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(array $attributes = [])
     {
@@ -62,7 +62,7 @@ class Mark extends Model
     /**
      * Set the name attribute on the model.
      *
-     * @param string $value
+     * @param  string  $value
      */
     public function setNameAttribute($value)
     {
@@ -70,5 +70,4 @@ class Mark extends Model
         $this->attributes['name'] = $value;
         $this->attributes['normalized'] = normalize($value);
     }
-
 }

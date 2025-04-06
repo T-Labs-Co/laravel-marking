@@ -12,7 +12,7 @@ trait Markable
     public static function bootMarkable(): void
     {
         static::deleting(function ($model) {
-            if (!method_exists($model, 'runSoftDelete') || $model->isForceDeleting()) {
+            if (! method_exists($model, 'runSoftDelete') || $model->isForceDeleting()) {
                 $model->unmark();
             }
         });
@@ -20,8 +20,6 @@ trait Markable
 
     /**
      * Get a collection of all tags the model has.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function marks(): MorphToMany
     {
@@ -35,9 +33,7 @@ trait Markable
     /**
      * Attach one or multiple tags to the model.
      *
-     * @param string|array $names
-     *
-     * @return self
+     * @param  string|array  $names
      */
     public function marking($names, $classification = null): self
     {
@@ -58,13 +54,12 @@ trait Markable
      * Attach one or more existing marks to a model,
      * identified by the mark's IDs.
      *
-     * @param int|int[] $ids
-     *
+     * @param  int|int[]  $ids
      * @return $this
      */
     public function markingById($ids): self
     {
-        if (!is_array($ids)) {
+        if (! is_array($ids)) {
             $ids = [$ids];
         }
 
@@ -79,19 +74,19 @@ trait Markable
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      */
     public function markingOne(string|array $name, $classification = null): void
     {
         /** @var Mark $mark */
         $mark = Mark::firstOrCreate([
             'name' => $this->normalizeMarkName($name),
-            'classification' => $this->normalizeMarkClassification($classification)
+            'classification' => $this->normalizeMarkClassification($classification),
         ]);
 
         $key = $mark->getKey();
 
-        if (!$this->getAttribute('marks')->contains($key)) {
+        if (! $this->getAttribute('marks')->contains($key)) {
             $this->marks()->attach($key);
         }
     }
@@ -115,13 +110,12 @@ trait Markable
      * Detach one or more existing marks to a model,
      * identified by the mark's IDs.
      *
-     * @param int|int[] $ids
-     *
+     * @param  int|int[]  $ids
      * @return $this
      */
     public function unmarkingById($ids): self
     {
-        if (!is_array($ids)) {
+        if (! is_array($ids)) {
             $ids = [$ids];
         }
 
@@ -136,14 +130,14 @@ trait Markable
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      */
     protected function unmarkingOne(mixed $name, $classification = null): void
     {
         /** @var Mark $mark */
         $mark = Mark::first([
             'name' => $this->normalizeMarkName($name),
-            'classification' => $this->normalizeMarkClassification($classification)
+            'classification' => $this->normalizeMarkClassification($classification),
         ]);
 
         if ($mark) {
@@ -154,9 +148,7 @@ trait Markable
     /**
      * Remove all marks from the model and assign the given ones.
      *
-     * @param string|array $names
-     *
-     * @return self
+     * @param  string|array  $names
      */
     public function remarking($names, $classification = null): self
     {
@@ -167,8 +159,6 @@ trait Markable
 
     /**
      * Remove all marks from the model.
-     *
-     * @return self
      */
     public function demarking(): self
     {
@@ -206,7 +196,7 @@ trait Markable
             return normalize($value);
         }
 
-        if ($value && is_array($value)  && isset($value['name'])) {
+        if ($value && is_array($value) && isset($value['name'])) {
             return normalize($value['name']);
         }
 
@@ -219,7 +209,7 @@ trait Markable
 
     private function normalizeMarkClassification(string $classification)
     {
-        if (!is_valid_mark_classification($classification)) {
+        if (! is_valid_mark_classification($classification)) {
             throw new InvalidMarkClassificationException($classification);
         }
 

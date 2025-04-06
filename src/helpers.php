@@ -1,13 +1,8 @@
 <?php
 
-
-if (!function_exists('normalize')) {
+if (! function_exists('normalize')) {
     /**
      * Normalize a string.
-     *
-     * @param string $string
-     *
-     * @return string
      */
     function normalize(string $string): string
     {
@@ -43,20 +38,16 @@ if (! function_exists('normalize_mark_metadata')) {
             return (array) $metadata;
         }
 
-        if (!is_array($metadata)) {
+        if (! is_array($metadata)) {
             $metadata = [$metadata];
         }
 
         return $metadata;
     }
 }
-if (!function_exists('snake_case')) {
+if (! function_exists('snake_case')) {
     /**
      * Convert a string to snake_case.
-     *
-     * @param string $string
-     *
-     * @return string
      */
     function snake_case(string $string): string
     {
@@ -65,7 +56,7 @@ if (!function_exists('snake_case')) {
 }
 
 if (! function_exists('normalize_mark_classification')) {
-    function normalize_mark_classification(string $type = null): string|null
+    function normalize_mark_classification(?string $type = null): ?string
     {
         $default = config('marking.default_classification');
         if (is_null($type)) {
@@ -87,11 +78,9 @@ if (! function_exists('mark_classifications')) {
     }
 }
 
-
 if (! function_exists('is_valid_mark_classification')) {
     function is_valid_mark_classification(string $type): bool
     {
         return in_array($type, mark_classifications());
     }
 }
-
