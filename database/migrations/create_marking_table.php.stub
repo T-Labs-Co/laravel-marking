@@ -8,12 +8,72 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('laravel_marking_table', function (Blueprint $table) {
-            $table->id();
+        $connection = config('marking.connection');
+        $markingMarksTable = config('marking.tables.marking_marks', 'marking_marks');
+        $markingMarkablesTable = config('marking.tables.marking_markables', 'marking_markables');
 
-            // add fields
+        $charset = Schema::connection($connection)->getConnection()->getConfig('charset') ?? 'utf8mb4';
+        $driver = Schema::connection($connection)->getConnection()->getConfig('driver');
 
-            $table->timestamps();
-        });
+        switch ($driver) {
+            case 'pgsql':
+                $collation = null;
+                break;
+            case 'sqlite':
+            case 'sqlsrv':
+            default:
+                $collation = $charset .'_bin';
+        }
+
+        if (!Schema::connection($connection)->hasTable($markingMarksTable)) {
+            Schema::connection($connection)->create($markingMarksTable, static function(Blueprint $table) use ($collation) {
+                $table->bigIncrements('mark_id');
+                $table->string('name');
+                $table->string('classification')->default('general'); // general, topic, stock, app,
+                $table->string('normalized')->collation($collation);
+                $table->smallInteger('weight')->default(0); // 1->5
+
+                $table->timestamps();
+
+                $table->index('normalized', 'classification');
+                $table->unique(['normalized', 'classification']);
+            });
+        }
+
+        if (!Schema::connection($connection)->hasTable($markingMarkablesTable)) {
+            Schema::connection($connection)->create($markingMarkablesTable, static function(Blueprint $table) {
+                $table->unsignedBigInteger('mark_id');
+                $table->unsignedBigInteger('markable_id');
+                $table->string('markable_type');
+                $table->unsignedBigInteger('marker_id')->nullable();
+                $table->string('marker_type')->nullable();
+
+                $table->string('value')->nullable(); // value for the marking
+                $table->json('metadata')->nullable(); // additional data
+
+                $table->timestamps();
+
+                $table->unique(['mark_id', 'markable_id', 'markable_type']);
+
+                $table->index(['mark_id', 'markable_id'], 'i_marking_fwd');
+                $table->index(['markable_id', 'mark_id'], 'i_marking_rev');
+                $table->index('markable_type', 'i_marking_type');
+            });
+        }
+    }
+
+    public function down()
+    {
+        $connection = config('marking.connection');
+        $markingMarksTable = config('marking.tables.marking_marks', 'marking_marks');
+        $markingMarkablesTable = config('marking.tables.marking_markables', 'marking_markables');
+
+        if (Schema::connection($connection)->hasTable($markingMarkablesTable)) {
+            Schema::connection($connection)->drop($markingMarkablesTable);
+        }
+
+        if (Schema::connection($connection)->hasTable($markingMarksTable)) {
+            Schema::connection($connection)->drop($markingMarksTable);
+        }
     }
 };
