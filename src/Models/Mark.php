@@ -4,6 +4,8 @@ namespace TLabsCo\LaravelMarking\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Arr;
 
 /**
  * @property string $normalized
@@ -69,5 +71,47 @@ class Mark extends Model
         $value = trim($value);
         $this->attributes['name'] = $value;
         $this->attributes['normalized'] = normalize($value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isRelation($key)
+    {
+        // Check for regular relation first
+        if ($return = parent::isRelation($key)) {
+            return $return;
+        }
+
+        // Check if the relation is defined via configuration
+        $relatedClass = Arr::get(config('marking.markedModels'), $key);
+
+        if ($relatedClass) {
+            $relation = $this->markedModels($relatedClass);
+
+            tap($relation->getResults(), function ($results) use ($key) {
+                $this->setRelation($key, $results);
+            });
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the inverse of the polymorphic relation, via an attribute
+     * defining the type of models to return.
+     */
+    protected function markedModels(string $class): MorphToMany
+    {
+        $table = config('marking.tables.marking_markables', 'marking_markables');
+
+        return $this->morphedByMany($class, 'markable', $table, 'mark_id')
+            ->withTimestamps()
+            ->withPivot(['value', 'metadata'])
+            ->withCasts([
+                'metadata' => 'array',
+            ]);
     }
 }

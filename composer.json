@@ -5,6 +5,7 @@
         "T.Labs Co.",
         "laravel",
         "laravel-marking",
+        "laravel-markable",
         "laravel-tagging"
     ],
     "homepage": "https://github.com/t-labs-co/laravel-marking",
@@ -38,7 +39,10 @@
         "psr-4": {
             "TLabsCo\\LaravelMarking\\": "src/",
             "TLabsCo\\LaravelMarking\\Database\\Factories\\": "database/factories/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -64,7 +68,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "TLabsCo\\LaravelMarking\\LaravelMarkingServiceProvider"
+                "TLabsCo\\LaravelMarking\\MarkingServiceProvider"
             ],
             "aliases": {
                 "LaravelMarking": "Marking"

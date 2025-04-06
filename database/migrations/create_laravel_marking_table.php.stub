@@ -17,9 +17,9 @@ return new class extends Migration
 
         switch ($driver) {
             case 'pgsql':
+            case 'pgsql':
                 $collation = null;
                 break;
-            case 'sqlite':
             case 'sqlsrv':
             default:
                 $collation = $charset .'_bin';
@@ -45,10 +45,11 @@ return new class extends Migration
                 $table->unsignedBigInteger('mark_id');
                 $table->unsignedBigInteger('markable_id');
                 $table->string('markable_type');
+                // user marking
                 $table->unsignedBigInteger('marker_id')->nullable();
                 $table->string('marker_type')->nullable();
 
-                $table->string('value')->nullable(); // value for the marking
+                $table->string('value')->default(1)->nullable(); // value for the marking
                 $table->json('metadata')->nullable(); // additional data
 
                 $table->timestamps();

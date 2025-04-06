@@ -81,6 +81,10 @@ if (! function_exists('mark_classifications')) {
 if (! function_exists('is_valid_mark_classification')) {
     function is_valid_mark_classification(string $type): bool
     {
+        if (is_null($type)) {
+            return true;
+        }
+
         return in_array($type, mark_classifications());
     }
 }

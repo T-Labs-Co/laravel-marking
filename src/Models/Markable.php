@@ -207,7 +207,7 @@ trait Markable
         return value($value);
     }
 
-    private function normalizeMarkClassification(string $classification)
+    private function normalizeMarkClassification(string|null $classification)
     {
         if (! is_valid_mark_classification($classification)) {
             throw new InvalidMarkClassificationException($classification);
