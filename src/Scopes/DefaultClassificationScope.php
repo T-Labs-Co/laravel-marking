@@ -24,7 +24,7 @@ class DefaultClassificationScope extends ClassificationScope
         return config('marking.default_classification', 'general');
     }
 
-     /**
+    /**
      * Apply the scope to a given Eloquent query builder.
      */
     public function apply(Builder $builder, Model $model): void

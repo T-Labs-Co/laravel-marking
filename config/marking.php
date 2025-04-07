@@ -44,7 +44,7 @@ return [
      * The value will be nomalized to the type of the value
      * defined in the array.  The key is the classification name
      * and the value is the type of the value.
-     * 
+     *
      * classification =>  a closure function, or a callable, e.g. ['Classname', 'method'].
      */
     'values_caster' => [
@@ -72,9 +72,8 @@ return [
     'throwEmptyExceptions' => false,
 
     /**
-     * 
-     * Reverse model list from markedModels.  
-     * 
+     * Reverse model list from markedModels.
+     *
      * This is used to define the reverse relationship for the marked models.
      *
      *  'markedModels' => [

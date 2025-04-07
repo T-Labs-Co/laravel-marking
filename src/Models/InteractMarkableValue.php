@@ -2,8 +2,6 @@
 
 namespace TLabsCo\LaravelMarking\Models;
 
-use Illuminate\Support\Arr;
-
 trait InteractMarkableValue
 {
     public function getMarkingValuesMap($classification = null, $callable = null)
@@ -42,7 +40,7 @@ trait InteractMarkableValue
     {
         $valuesMap = $this->getMarkingValuesMap($classification, 'intval');
 
-        $positives = array_values(array_filter($valuesMap, fn($v) => $v > 0));
+        $positives = array_values(array_filter($valuesMap, fn ($v) => $v > 0));
 
         return count($positives);
     }
@@ -51,7 +49,7 @@ trait InteractMarkableValue
     {
         $valuesMap = $this->getMarkingValuesMap($classification, 'intval');
 
-        $positives = array_values(array_filter($valuesMap, fn($v) => $v < 0));
+        $positives = array_values(array_filter($valuesMap, fn ($v) => $v < 0));
 
         return count($positives);
     }
@@ -60,7 +58,7 @@ trait InteractMarkableValue
     {
         $valuesMap = $this->getMarkingValuesMap($classification, 'intval');
 
-        $neutrals = array_values(array_filter($valuesMap, fn($v) => $v == 0));
+        $neutrals = array_values(array_filter($valuesMap, fn ($v) => $v == 0));
 
         return count($neutrals);
     }
