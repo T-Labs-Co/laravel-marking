@@ -7,7 +7,7 @@ return [
 
     /**
      * List of characters that can delimit the labels passed to the
-     * mark() / unmark() / etc. functions.
+     * marking() / unmarking() / etc. functions.
      */
     'delimiters' => ',;',
 

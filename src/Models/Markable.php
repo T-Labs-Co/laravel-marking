@@ -46,7 +46,7 @@ trait Markable
     }
 
     /**
-     * Attach one or multiple tags to the model.
+     * Attach one or multiple marks to the model.
      *
      * @param  string|array  $names
      */

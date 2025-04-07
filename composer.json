@@ -1,6 +1,7 @@
 {
     "name": "t-labs-co/laravel-marking",
     "description": "Laravel Marking, Just Mark it",
+    "version": "1.0.0",
     "keywords": [
         "T.Labs Co.",
         "laravel",
