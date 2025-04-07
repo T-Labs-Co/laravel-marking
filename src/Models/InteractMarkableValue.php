@@ -2,9 +2,11 @@
 
 namespace TLabsCo\LaravelMarking\Models;
 
+use Illuminate\Support\Arr;
+
 trait InteractMarkableValue
 {
-    public function getMarkingValuesMap($classification = null)
+    public function getMarkingValuesMap($classification = null, $callable = null)
     {
         $marks = $this->marks->where('classification', $this->normalizeMarkClassification($classification))->all();
 
@@ -14,7 +16,13 @@ trait InteractMarkableValue
 
         $values = $marks->pluck('pivot.value', 'normalized')->toArray();
 
-        return array_map(fn ($v) => normalize_mark_value($v, $classification), $values);
+        $values = array_map(fn ($v) => normalize_mark_value($v, $classification), $values);
+
+        if ($callable && is_callable($callable)) {
+            $values = array_map(fn ($v) => $callable($v), $values);
+        }
+
+        return $values;
     }
 
     public function getMarkingValuesMapAndGroup()
@@ -28,6 +36,40 @@ trait InteractMarkableValue
         }
 
         return $all;
+    }
+
+    public function countMarkingValuesPositive($classification = null)
+    {
+        $valuesMap = $this->getMarkingValuesMap($classification, 'intval');
+
+        $positives = array_values(array_filter($valuesMap, fn($v) => $v > 0));
+
+        return count($positives);
+    }
+
+    public function countMarkingValuesNegative($classification = null)
+    {
+        $valuesMap = $this->getMarkingValuesMap($classification, 'intval');
+
+        $positives = array_values(array_filter($valuesMap, fn($v) => $v < 0));
+
+        return count($positives);
+    }
+
+    public function countMarkingValuesNeutral($classification = null)
+    {
+        $valuesMap = $this->getMarkingValuesMap($classification, 'intval');
+
+        $neutrals = array_values(array_filter($valuesMap, fn($v) => $v == 0));
+
+        return count($neutrals);
+    }
+
+    public function sumMarkingValues($classification = null)
+    {
+        $valuesMap = $this->getMarkingValuesMap($classification, 'intval');
+
+        return collect($valuesMap)->values()->sum();
     }
 
     public function updateMarkingValue($mark, $value, $classification = null)

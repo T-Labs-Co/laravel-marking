@@ -11,7 +11,8 @@ use TLabsCo\LaravelMarking\MarkingService;
 
 trait Markable
 {
-    //    protected static $defaultClassification = null;
+    use MarkableScopes;
+
     private static $pivotFields = ['value', 'metadata'];
 
     public static function defaultClassification()

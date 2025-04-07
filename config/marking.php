@@ -17,13 +17,36 @@ return [
      */
     'glue' => ',',
 
-    // allow marking classification group
-    'classifications' => array_merge(['general'], Arr::dot(explode(',', env('LARAVEL_MARKING_CLASSIFICATIONS', '')))),
+    /**
+     * The default classification to use when no classification is
+     * specified.  This is used when the model does not have a
+     * default classification defined.
+     */
+    'classifications' => array_merge(
+        ['general'],
+        Arr::dot(explode(',', env('LARAVEL_MARKING_CLASSIFICATIONS', '')))
+    ),
+
+    /**
+     * The default classification to use when no classification is
+     * specified.  This is used when the model does not have a
+     * default classification defined.
+     */
     'default_classification' => env('LARAVEL_MARKING_CLASSIFICATION_DEFAULT', 'general'),
 
+    /**
+     * The default value to use when no value is specified.  This
+     * is used when the model does not have a default value defined.
+     */
     'default_value' => env('LARAVEL_MARKING_VALUE_DEFAULT', 1), // using to count or sum point
 
-    // classification =>  a closure function, or a callable, e.g. ['Classname', 'method'].
+    /**
+     * The value will be nomalized to the type of the value
+     * defined in the array.  The key is the classification name
+     * and the value is the type of the value.
+     * 
+     * classification =>  a closure function, or a callable, e.g. ['Classname', 'method'].
+     */
     'values_caster' => [
         'general' => 'strval', //
     ],
@@ -49,19 +72,18 @@ return [
     'throwEmptyExceptions' => false,
 
     /**
-     * If you want to be able to find all the models that share a label, you will need
-     * to define the inverse relations here.  The array keys are the relation names
-     * you would use to access them (e.g. "posts") and the values are the qualified
-     * class names of the models that are taggable (e.g. "\App\Post).  e.g. with
-     * the following configuration:
+     * 
+     * Reverse model list from markedModels.  
+     * 
+     * This is used to define the reverse relationship for the marked models.
      *
      *  'markedModels' => [
-     *      'posts' => \App\Post::class
+     *      'categories' => \App\Category::class
      *  ]
      *
      * You will be able to do:
      *
-     *  $posts = Marking::findByName('mark')->posts;
+     *  $categories = Marking::findByName('trending')->categories;
      *
      * to get a collection of all the Posts that are marked "label".
      */
@@ -75,7 +97,7 @@ return [
     'model' => \TLabsCo\LaravelMarking\Models\Mark::class,
 
     /**
-     * The tables used to store the tags in the database.  You can
+     * The tables used to store the marks in the database.  You can
      * publish the package's migrations and use custom names.
      */
     'tables' => [

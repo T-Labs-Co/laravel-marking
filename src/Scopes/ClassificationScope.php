@@ -6,19 +6,19 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-class TypeScope implements Scope
+class ClassificationScope implements Scope
 {
     /**
      * The type to filter by.
      */
-    protected string $type;
+    protected string $classification;
 
     /**
      * Create a new TypeScope instance.
      */
-    public function __construct(string $type)
+    public function __construct(string $classification)
     {
-        $this->type = $type;
+        $this->classification = $classification;
     }
 
     /**
@@ -26,6 +26,6 @@ class TypeScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $builder->where('type', $this->type);
+        $builder->where('classification', $this->classification);
     }
 }

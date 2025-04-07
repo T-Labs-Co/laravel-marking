@@ -4,7 +4,7 @@ namespace TLabsCo\LaravelMarking\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use TLabsCo\LaravelMarking\LaravelMarkingServiceProvider;
+use TLabsCo\LaravelMarking\MarkingServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -20,7 +20,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            LaravelMarkingServiceProvider::class,
+            MarkingServiceProvider::class,
         ];
     }
 
