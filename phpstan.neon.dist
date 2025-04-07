@@ -13,3 +13,4 @@ parameters:
     ignoreErrors:
         - "#Called 'env' outside of the config directory which returns null when the config is cached, use 'config'#"
         - '#Trait [a-zA-Z0-9\\_]+Markable is used zero times and is not analysed#'
+        - '#Trait [a-zA-Z0-9\\_]+InteractMarkableValue is used zero times and is not analysed#'

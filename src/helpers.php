@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Arr;
+
 if (! function_exists('normalize')) {
     /**
      * Normalize a string.
@@ -11,8 +13,16 @@ if (! function_exists('normalize')) {
 }
 
 if (! function_exists('normalize_mark_value')) {
-    function normalize_mark_value($value = null)
+    function normalize_mark_value($value = null, $classification = null)
     {
+        // TODO: get caster
+        $classification = normalize_mark_classification($classification);
+        $caster = Arr::get(config('marking.values_caster'), $classification);
+
+        if (is_callable($caster)) {
+            return call_user_func($caster, $value);
+        }
+
         $default = config('marking.default_value');
 
         if (is_null($value)) {
@@ -79,7 +89,7 @@ if (! function_exists('mark_classifications')) {
 }
 
 if (! function_exists('is_valid_mark_classification')) {
-    function is_valid_mark_classification(string $type): bool
+    function is_valid_mark_classification(?string $type = null): bool
     {
         if (is_null($type)) {
             return true;

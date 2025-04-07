@@ -22,6 +22,12 @@ return [
     'default_classification' => env('LARAVEL_MARKING_CLASSIFICATION_DEFAULT', 'general'),
 
     'default_value' => env('LARAVEL_MARKING_VALUE_DEFAULT', 1), // using to count or sum point
+
+    // classification =>  a closure function, or a callable, e.g. ['Classname', 'method'].
+    'values_caster' => [
+        'general' => 'strval', //
+    ],
+
     /**
      * Method used to "normalize" label names.  Can either be a global function name,
      * a closure function, or a callable, e.g. ['Classname', 'method'].

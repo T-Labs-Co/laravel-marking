@@ -4,11 +4,21 @@ namespace TLabsCo\LaravelMarking\Models;
 
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Arr;
+use TLabsCo\LaravelMarking\Events\ModelMarked;
+use TLabsCo\LaravelMarking\Events\ModelUnmarked;
 use TLabsCo\LaravelMarking\Exceptions\InvalidMarkClassificationException;
 use TLabsCo\LaravelMarking\MarkingService;
 
 trait Markable
 {
+    //    protected static $defaultClassification = null;
+    private static $pivotFields = ['value', 'metadata'];
+
+    public static function defaultClassification()
+    {
+        return null;
+    }
+
     public static function bootMarkable(): void
     {
         static::deleting(function ($model) {
@@ -27,6 +37,10 @@ trait Markable
         $table = config('marking.tables.marking_markables', 'marking_markables');
 
         return $this->morphToMany($model, 'markable', $table, 'markable_id', 'mark_id')
+            ->withPivot(static::$pivotFields)
+            ->withCasts([
+                'metadata' => 'array',
+            ])
             ->withTimestamps();
     }
 
@@ -35,17 +49,16 @@ trait Markable
      *
      * @param  string|array  $names
      */
-    public function marking($names, $classification = null): self
+    public function marking($names, $pivotData = [], $classification = null): self
     {
         $marks = MarkingService::make()->buildMarkArray($names);
 
         foreach ($marks as $mark) {
-            $this->markingOne($mark, $classification);
+            $this->markingOne($mark, $pivotData, $classification);
             $this->load('marks');
         }
 
-        // TODO: add event
-        // event(new ModelMarked($this, $marks));
+        event(new ModelMarked($this, $marks));
 
         return $this;
     }
@@ -73,10 +86,7 @@ trait Markable
         return $this;
     }
 
-    /**
-     * @param  string  $name
-     */
-    public function markingOne(string|array $name, $classification = null): void
+    public function markingOne(string|array $name, $pivotData = [], $classification = null): void
     {
         /** @var Mark $mark */
         $mark = Mark::firstOrCreate([
@@ -84,10 +94,20 @@ trait Markable
             'classification' => $this->normalizeMarkClassification($classification),
         ]);
 
+        // Extract pivot fields value
+        if (is_array($name) && empty($pivotData)) {
+            $pivotData = Arr::only($name, static::$pivotFields);
+        }
+
         $key = $mark->getKey();
 
         if (! $this->getAttribute('marks')->contains($key)) {
-            $this->marks()->attach($key);
+            if (! empty($pivotData)) {
+                $pivotData = Arr::only($pivotData, static::$pivotFields);
+            } else {
+                $pivotData = [];
+            }
+            $this->marks()->attach($key, $pivotData);
         }
     }
 
@@ -100,8 +120,7 @@ trait Markable
             $this->load('marks');
         }
 
-        // TODO: add event
-        // event(new ModelUnmarked($this, $marks));
+        event(new ModelUnmarked($this, $marks));
 
         return $this;
     }
@@ -169,17 +188,17 @@ trait Markable
         return $this;
     }
 
-    private function normalizeMarkValue(mixed $value)
+    protected function normalizeMarkValue(mixed $value, $classification = null)
     {
         // default value is 1 - support count
         if ($value && is_array($value) && isset($value['value'])) {
             $value = $value['value'];
         }
 
-        return normalize_mark_value($value);
+        return normalize_mark_value($value, $classification);
     }
 
-    private function normalizeMarkMetadata(mixed $value)
+    protected function normalizeMarkMetadata(mixed $value)
     {
         $metadata = null;
 
@@ -190,8 +209,12 @@ trait Markable
         return normalize($metadata);
     }
 
-    private function normalizeMarkName(mixed $value)
+    protected function normalizeMarkName(mixed $value)
     {
+        if ($value instanceof Mark) {
+            return $value->normalized;
+        }
+
         if (is_string($value)) {
             return normalize($value);
         }
@@ -207,8 +230,10 @@ trait Markable
         return value($value);
     }
 
-    private function normalizeMarkClassification(?string $classification)
+    protected function normalizeMarkClassification(?string $classification)
     {
+        $classification = $classification ?? static::defaultClassification();
+
         if (! is_valid_mark_classification($classification)) {
             throw new InvalidMarkClassificationException($classification);
         }
