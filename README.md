@@ -33,6 +33,13 @@ This package is extend and support all feature like tagging package,
 - `Morphable Relationships`: Supports polymorphic relationships for marking multiple models.
 - `Value Casting`: Automatically cast mark values based on their classification.
 
+## Support PHP and Laravel Version
+
+This package supports the following versions:
+
+- **PHP**: `^8.2` or higher
+- **Laravel**: `^11.0` or higher
+
 ## Installation
 
 You can install the package via composer:
@@ -81,7 +88,7 @@ return [
 Your models should use the Markable trait:
 
 ```php
-use TLabsCo\LaravelMarking\Models;
+use TLabsCo\LaravelMarking\Models\Markable;
 
 class MyModel extends Eloquent
 {
@@ -152,6 +159,35 @@ $model->marking([['name' => 'Coffee', 'value' => 2]], classification: 'drink');
 
 // Or an array:
 $model->marking(['Coffee' =>  ['value' => 2]], classification: 'drink');
+```
+
+### Interact with the value from your marks
+
+Your models should use the `Markable` and `InteractMarkableValue` trait:
+
+```php
+use TLabsCo\LaravelMarking\Models\Markable;
+use TLabsCo\LaravelMarking\Models\InteractMarkableValue;
+
+class MyModel extends Eloquent
+{
+    use Markable;
+    use InteractMarkableValue;
+}
+```
+
+You also add value to your mark
+
+```php
+// Get values map by classification
+$model->getMarkingValuesMap('food'); // ['Cake' => 1, 'Fruit' => 2]
+
+// Sum vallues map by classification
+$model->sumMarkingValues('food'); // 3
+
+// Update or Add your mark with value in particular classification
+$model->updateMarkingValue('Cake', 5, 'food'); // 'Cake' => 5
+
 ```
 
 
