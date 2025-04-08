@@ -9,6 +9,9 @@ use Illuminate\Support\Arr;
 
 /**
  * @property string $normalized
+ * @property string $name
+ * @property string $classification
+ * @property int $weight
  */
 class Mark extends Model
 {

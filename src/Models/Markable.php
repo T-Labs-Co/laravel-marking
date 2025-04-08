@@ -189,6 +189,27 @@ trait Markable
         return $this;
     }
 
+    protected function normalizeMarkName(mixed $value)
+    {
+        if ($value instanceof Mark) {
+            return $value->name;
+        }
+
+        if (is_string($value)) {
+            return $value;
+        }
+
+        if ($value && is_array($value) && isset($value['name'])) {
+            return $value['name'];
+        }
+
+        if (is_array($value) && Arr::isAssoc($value)) {
+            return array_key_first($value);
+        }
+
+        return value($value);
+    }
+
     protected function normalizeMarkValue(mixed $value, $classification = null)
     {
         // default value is 1 - support count
@@ -208,27 +229,6 @@ trait Markable
         }
 
         return normalize($metadata);
-    }
-
-    protected function normalizeMarkName(mixed $value)
-    {
-        if ($value instanceof Mark) {
-            return $value->normalized;
-        }
-
-        if (is_string($value)) {
-            return normalize($value);
-        }
-
-        if ($value && is_array($value) && isset($value['name'])) {
-            return normalize($value['name']);
-        }
-
-        if (is_array($value) && Arr::isAssoc($value)) {
-            return normalize(array_key_first($value));
-        }
-
-        return value($value);
     }
 
     protected function normalizeMarkClassification(?string $classification)
