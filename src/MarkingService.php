@@ -1,9 +1,26 @@
 <?php
-
+/*
+ * This file is a part of package t-co-labs/laravel-marking
+ *
+ * (c) T.Labs & Co.
+ * Contact for Work: T. <hongty.huynh@gmail.com>
+ *
+ * Got a PHP or Laravel project? We're your go-to team! We can help you:
+ *   - Architect the perfect solution for your specific needs.
+ *   - Get cleaner, faster, and more efficient code.
+ *   - Boost your app's performance through refactoring and optimization.
+ *   - Build your project the right way with Laravel best practices.
+ *   - Get expert guidance and support for all things Laravel.
+ *   - Ensure high-quality code through thorough reviews.
+ *   - Provide leadership for your team and manage your projects effectively.
+ *   - Bring in a seasoned Technical Lead.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace TLabsCo\LaravelMarking;
 
-use Cviebrock\EloquentTaggable\Models\Tag;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Collection;
 use TLabsCo\LaravelMarking\Models\Mark;
 
 class MarkingService
@@ -32,7 +49,7 @@ class MarkingService
     }
 
     /**
-     * Convert a delimited string into an array of tag strings.
+     * Convert a delimited string into an array of mark strings.
      *
      * @param  string|array|Mark|\Illuminate\Support\Collection  $marks
      *
@@ -44,7 +61,7 @@ class MarkingService
             $array = $marks;
         } elseif ($marks instanceof Mark) {
             $array = [$marks->normalized];
-        } elseif ($marks instanceof BaseCollection) {
+        } elseif ($marks instanceof Collection) {
             $array = $this->buildMarkArray($marks->all());
         } elseif (is_string($marks)) {
             $array = preg_split(
@@ -54,9 +71,8 @@ class MarkingService
                 PREG_SPLIT_NO_EMPTY
             );
         } else {
-
             throw new \ErrorException(
-                __CLASS__.'::'.__METHOD__.' expects parameter 1 to be string, array, Tag or Collection; '.
+                __CLASS__.'::'.__METHOD__.' expects parameter 1 to be string, array, Mark or Collection; '.
                 gettype($marks).' given'
             );
         }
