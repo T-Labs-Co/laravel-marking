@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is a part of package t-co-labs/laravel-marking
  *
@@ -18,6 +19,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace TLabsCo\LaravelMarking;
 
 use Closure;
