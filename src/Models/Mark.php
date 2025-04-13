@@ -93,7 +93,7 @@ class Mark extends Model
     {
         $value = trim($value);
         $this->attributes['name'] = $value;
-        if (!$this->normalized) {
+        if (! $this->normalized) {
             $this->attributes['normalized'] = normalize($value);
         }
     }
