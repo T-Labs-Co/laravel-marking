@@ -100,8 +100,8 @@ trait Markable
         $marks = Mark::whereIn('mark_id', $ids ?? [-1])->get();
         $classifications = $marks->pluck('classification')->unique()->values()->toArray();
         foreach ($classifications as $classification) {
-            $names = $marks->where('classification', $classification)->all();
-            $this->marking($names, $classification);
+            $names = collect($marks->where('classification', $classification)->pluck('normalized')->toArray());
+            $this->marking($names, classification: $classification);
         }
 
         return $this;
@@ -111,9 +111,12 @@ trait Markable
     {
         /** @var Mark $mark */
         $mark = Mark::firstOrCreate([
-            'name' => $this->normalizeMarkName($name),
+            //'name' => $this->normalizeMarkName($name),
+            'normalized' => normalize($name),
             'classification' => $this->normalizeMarkClassification($classification),
         ]);
+
+        $mark->name = $this->normalizeMarkName($name);
 
         // Extract pivot fields value
         if (is_array($name) && empty($pivotData)) {
@@ -162,7 +165,7 @@ trait Markable
         $marks = Mark::whereIn('mark_id', $ids ?? [-1])->get();
         $classifications = $marks->pluck('classification')->unique()->values()->toArray();
         foreach ($classifications as $classification) {
-            $names = $marks->where('classification', $classification)->all();
+            $names = collect($marks->where('classification', $classification)->pluck('normalized')->toArray());
             $this->unmarking($names, $classification);
         }
 
@@ -175,10 +178,10 @@ trait Markable
     protected function unmarkingOne(mixed $name, $classification = null): void
     {
         /** @var Mark $mark */
-        $mark = Mark::first([
-            'name' => $this->normalizeMarkName($name),
+        $mark = Mark::where([
+            'normalized' => normalize($name),
             'classification' => $this->normalizeMarkClassification($classification),
-        ]);
+        ])->first();
 
         if ($mark) {
             $this->marks()->detach($mark);
@@ -192,7 +195,7 @@ trait Markable
      */
     public function remarking($names, $classification = null): self
     {
-        $this->demarking();
+        $this->demarking($classification);
 
         return $this->marking($names, $classification);
     }
@@ -200,10 +203,14 @@ trait Markable
     /**
      * Remove all marks from the model.
      */
-    public function demarking(): self
+    public function demarking($classification = null): self
     {
-        $this->marks()->sync([]);
-
+        if ($classification) {
+            $marks = $this->marks->where('classification', $classification)->pluck('normalized')->toArray();
+            $this->unmarking($marks, $classification);
+        } else {
+            $this->marks()->sync([]);
+        }
         $this->load('marks');
 
         return $this;
