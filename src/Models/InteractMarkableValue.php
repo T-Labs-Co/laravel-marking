@@ -109,4 +109,26 @@ trait InteractMarkableValue
 
         return $this;
     }
+
+    public function getMarkingAsSelectList($classification)
+    {
+        $marks = collect($this->marks->where('classification', $classification)->all());
+
+        $select = [];
+        foreach ($marks as $mark) {
+            $select[$mark->normalized] = $mark->name;
+        }
+
+        return $select;
+    }
+
+    public function getAllMarkingAsSelectList()
+    {
+        $select = [];
+        foreach (self::$supportClassifications as $classification) {
+            $select[$classification] = $this->getMarkingAsSelectList($classification);
+        }
+
+        return $select;
+    }
 }
