@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-marking` will be documented in this file.
 
+## v1.0.2 - 2025-06-10
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.3.0 to 2.4.0 by @dependabot in https://github.com/T-Labs-Co/laravel-marking/pull/1
+
+### New Contributors
+
+* @dependabot made their first contribution in https://github.com/T-Labs-Co/laravel-marking/pull/1
+
+**Full Changelog**: https://github.com/T-Labs-Co/laravel-marking/compare/v1.0.1...v1.0.2
+
 ## v1.0.1 - 2025-04-13
 
 **Full Changelog**: https://github.com/T-Labs-Co/laravel-marking/compare/v1.0.0...v1.0.1
