@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-marking` will be documented in this file.
 
+## v1.0.4 - 2026-04-16
+
+**Full Changelog**: https://github.com/T-Labs-Co/laravel-marking/compare/v1.0.3...v1.0.4
+
 ## Hotfix Deleting Event - 2026-04-16
 
 **Full Changelog**: https://github.com/T-Labs-Co/laravel-marking/compare/v1.0.2...v1.0.4
