@@ -44,7 +44,9 @@ trait Markable
     {
         static::deleting(function ($model) {
             if (! method_exists($model, 'runSoftDelete') || $model->isForceDeleting()) {
-                $model->unmark();
+                if (method_exists($model, 'demarking')) {
+                    $model->demarking();
+                }
             }
         });
     }
