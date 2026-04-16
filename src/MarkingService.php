@@ -53,7 +53,7 @@ class MarkingService
     /**
      * Convert a delimited string into an array of mark strings.
      *
-     * @param  string|array|Mark|\Illuminate\Support\Collection  $marks
+     * @param  string|array|Mark|Collection  $marks
      *
      * @throws \ErrorException
      */
@@ -87,7 +87,7 @@ class MarkingService
     /**
      * Convert a delimited string into an array of normalized tag strings.
      *
-     * @param  string|array|Mark|\Illuminate\Support\Collection  $marks
+     * @param  string|array|Mark|Collection  $marks
      *
      * @throws \ErrorException
      */

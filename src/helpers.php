@@ -49,7 +49,7 @@ if (! function_exists('normalize_mark_value')) {
         }
 
         if (is_array($value)) {
-            return \Illuminate\Support\Arr::first(\Illuminate\Support\Arr::dot($value));
+            return Arr::first(Arr::dot($value));
         }
 
         return value($value);

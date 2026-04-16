@@ -20,6 +20,7 @@
  * file that was distributed with this source code.
  */
 use Illuminate\Support\Arr;
+use TLabsCo\LaravelMarking\Models\Mark;
 
 // config for TLabsCo/LaravelMarking
 return [
@@ -112,7 +113,7 @@ return [
      * create your own class that extends the package's Marking model,
      * then update the configuration below.
      */
-    'model' => \TLabsCo\LaravelMarking\Models\Mark::class,
+    'model' => Mark::class,
 
     /**
      * The tables used to store the marks in the database.  You can
